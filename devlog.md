@@ -122,3 +122,8 @@ I've written the rest of the insertion logic, will begin on the utility logic ne
 
 4:50 PM
 Alright now the entirety of the btree code is written, all that's needed now will be main.py and putting it all together.  This is where I'll get to dive into more testing and hopefully find it running perfectly.
+
+5:36 PM
+I've written in the main driver, the code was written as an elif structure to then fill in logic for each command.  While a separate method was used for error outputting.
+
+I'm going to begin testing and go through the debugging process.
