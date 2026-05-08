@@ -243,5 +243,52 @@ class BTree:
             
             # Descended into non-full kid
             self._insert_non_full(child, key, value)
+            
+   
+    " Utility Logic Below "
+    
+    def print_tree(self):
+        # Print all keys/values in order
+        self._in_order_traverse(self.file_manager.root_id, lambda k, v: print(f"{k} {v}"))
+    
+    def extract_to_csv(self, filename):
+        # Extract tree to csv file
+        if os.path.exists(filename):
+            raise FileExistsError(f"Error: Output file '{filename}' already exists.")
         
+        with open(filename, 'w', newline='') as f:
+            writer = csv.writer(f)
+            self._in_order_traverse(self.file_manager.root_id, lambda k, v: writer.writerow([k, v]))
+    
+    def load_from_csv(self, filename):
+        # Read a csv and insert each key/value pair
+        if not os.path.exists(filename):
+            raise FileNotFoundError(f"Error: Input file '{filename}' does not exist.")
 
+        with open(filename, 'r') as f:
+            reader = csv.reader(f)
+            for row in reader:
+                if len(row) == 2:
+                    key, val = int(row[0].strip()), int(row[1].strip())
+                    self.insert(key, val)
+    
+    def _in_order_traverse(self, node_id, callback):
+        # Traverses tree in order, calling callback on each pair
+        # Uses buffermanager to handle paging nodes I/O memory
+        
+        if node_id == 0:
+            return
+        
+        node = self.buffer.get_node(node_id)
+        
+        for i in range(node.num_keys):
+            if not node.is_leaf():
+                self._in_order_traverse(node.children[i], callback)
+            
+            # Re-fetch node after recursive return
+            # Traversing deep into children has potential to evict parent
+            node = self.buffer.get_node(node_id) 
+            callback(node.keys[i], node.values[i])
+        
+        if not node.is_leaf():
+            self._in_order_traverse(node.children[node.num_keys], callback)

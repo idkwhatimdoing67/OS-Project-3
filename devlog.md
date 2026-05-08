@@ -120,3 +120,5 @@ I've written the first piece of the insertion logic, my goal is to define the re
 4:30 PM
 I've written the rest of the insertion logic, will begin on the utility logic next.  Hopefully it'll come together but the challenge is that I can't really test much until the program is all fully built.  At least if I can I'm not sure how.
 
+4:50 PM
+Alright now the entirety of the btree code is written, all that's needed now will be main.py and putting it all together.  This is where I'll get to dive into more testing and hopefully find it running perfectly.
