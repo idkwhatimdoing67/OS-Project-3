@@ -50,4 +50,57 @@ class IndexFileManager:
         # Read root id and next block id
         self.root_id = int.from_bytes(self.file.read(8), 'big', signed=False)
         self.next_block_id = int.from_bytes(self.file.read(8), 'big', signed=False)
+    
+    def update_header(self):
+        # Write current root id and next block id to block 0
+        if not self.file:
+            raise IOError("File is not open.")
         
+        # Seek to byte 8
+        # This will skip 8 bytes, we need to skip the Magic Number
+        self.file.seek(8) 
+        self.file.write(self.root_id.to_bytes(8, 'big', signed=False))
+        self.file.write(self.next_block_id.to_bytes(8, 'big', signed=False))
+        
+    def get_new_block_id(self):
+        # Return next available block id, will also increment counter
+        new_id = self.next_block_id
+        self.next_block_id += 1
+        self.update_header() # Commits increment to disk
+        return new_id
+    
+    def set_root_id(self, new_root_id):
+        # Updates root id in memory; saves it to header block
+        self.root_id = new_root_id
+        self.update_header()
+    
+    def read_block(self, block_id):
+        # Read and return raw 512 byte block from disk
+        if not self.file:
+            raise IOError("File isn't open")
+        
+        self.file.seek(block_id * self.BLOCK_SIZE)
+        data = self.file.read(self.BLOCK_SIZE)
+        
+        if len(data) != self.BLOCK_SIZE:
+            data = data.ljust(self.BLOCK_SIZE, b'\x00')
+            # Check in case file end is reached prematurely
+        
+        return data
+    
+    def write_block(self, block_id, data):
+        # Write 512 bytes to block id input
+        if not self.file:
+            raise IOError("File is not open.")
+        if len(data) != self.BLOCK_SIZE:
+            raise ValueError(f"Error: Data block must be exactly {self.BLOCK_SIZE} bytes.")
+        
+        self.file.seek(block_id * self.BLOCK_SIZE)
+        self.file.write(data)
+        
+    def close(self):
+        # Closes file pointer
+        if self.file:
+            self.update_header()
+            self.file.close()
+            self.file = None

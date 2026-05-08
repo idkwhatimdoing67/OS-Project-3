@@ -45,3 +45,9 @@ write_node
 Continuing to write the idxfilemanager class
 Got through the create and open file methods
 Not too sure how to test them until everything is built.
+
+Made some adjustments to the class structure, added a proper close method
+Changed the variables root_id and next_block_id from vars to have proper getter/setter methods instead.  I'm hoping enforcing more encapsulation of these pieces will help insulate me from bugs later on but I might be wrong.
+    I'm sure there'll be some typo that destroys my machine
+
+
