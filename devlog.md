@@ -53,3 +53,13 @@ Changed the variables root_id and next_block_id from vars to have proper getter/
 
 2:46 AM
 Got started on Btree node class, wanted to initialize constants and the is_leaf method.
+
+
+1:00 PM
+Wrote in pack_to_bytes, the full class plan I have for BTree Node will be:
+init
+is_leaf
+pack_to_bytes
+unpack_from_bytes
+
+This way the node can ideally just exist to work with the disk by packing/unpacking and we can focus on core functionality in BTree class proper.
