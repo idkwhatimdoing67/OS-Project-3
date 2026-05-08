@@ -43,3 +43,28 @@ class BTreeNode:
         
         return packed_data
     
+    def unpack_from_bytes(self, raw_data):
+        # Deserializes 512 byte block into lists 
+        if len(raw_data) != self.BLOCK_SIZE:
+            raise ValueError(f"Expected {self.BLOCK_SIZE} bytes, got {len(raw_data)}")
+        
+        #Unpack first 488 bytes
+        unpacked_data = struct.unpack(">61Q", raw_data[:488]) # Last 24 are useless as established in packing method
+        
+        # Restore header vars
+        self.block_id = unpacked_data[0]
+        self.parent_id = unpacked_data[1]
+        self.num_keys = unpacked_data[2]
+        
+        # Restore lists by slicing
+        # Remember to only slice the valid list and leave the padded one alone
+        
+        # Keys start at index 3
+        self.keys = list(unpacked_data[3:3+self.num_keys])
+        
+        # Values start at 22
+        self.values = list(unpacked_data[22:22+self.num_keys])
+        
+        # Children start at 41
+        num_children = self.num_keys + 1 if self.num_keys > 0 else 0
+        self.children = list(unpacked_data[41:41+num_children])
