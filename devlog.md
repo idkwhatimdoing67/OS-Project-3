@@ -127,3 +127,14 @@ Alright now the entirety of the btree code is written, all that's needed now wil
 I've written in the main driver, the code was written as an elif structure to then fill in logic for each command.  While a separate method was used for error outputting.
 
 I'm going to begin testing and go through the debugging process.
+
+
+
+5:40 PM
+Initial testing seemed to go well.  I tried a few insertion commands and got a goo search and print output:
+PS C:\Users\colin\OneDrive\Documents\GitHub\OS-Project-3> python3 main.py search myindex.idx 10
+FoundL Key=10, Value=500
+PS C:\Users\colin\OneDrive\Documents\GitHub\OS-Project-3> python3 main.py print myindex.idx
+10 500
+20 600
+
