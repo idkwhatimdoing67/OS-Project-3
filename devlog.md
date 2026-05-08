@@ -138,3 +138,14 @@ PS C:\Users\colin\OneDrive\Documents\GitHub\OS-Project-3> python3 main.py print 
 10 500
 20 600
 
+6:00 PM
+Overall testing has gone much better than expected, outputs for index files have gone well.
+I inserted the test index file provided by the assignment and had no issues with that.
+
+One weird quirk though:
+When I decided to create a .csv file convert to index through the code and then search it, there were invalid outputs
+Everything else though worked for the csv portion.
+
+I'm not particularly sure why it would be happening but I'll take another peak at the search logic.
+Then again I'm not so terribly worried as most of it works and I'm kind of burnt out from the semester.
+
