@@ -23,3 +23,19 @@ BTree processes node
 Check if cmd finished
     Yes, flush buffer and exit
     No, loop back to BTree request NodeID
+
+
+5/8 1:00AM
+Getting started on the classes for the program, will be splitting into multiple files for organization.
+Starting first with indexfilemanager which will act as the class responsible for handling raw byte manipulation and disk I/O.
+
+Vars:
+filename (string), file_pointer (File), root_id (int), next_block_id (int)
+
+Methods:
+create_new_file
+open_file
+read_header
+write_header
+read_node
+write_node
