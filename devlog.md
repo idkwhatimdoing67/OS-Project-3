@@ -39,3 +39,9 @@ read_header
 write_header
 read_node
 write_node
+
+
+1:30 AM
+Continuing to write the idxfilemanager class
+Got through the create and open file methods
+Not too sure how to test them until everything is built.
