@@ -82,4 +82,7 @@ mark_dirty
 evict_oldest
 flush_all
 
-This should ideally capture all buffer functionality we'll need
+This should ideally capture all buffer functionality we'll need.
+
+3:03 PM
+Finished writing in the logic for the buffermanager class, should have everything needed for proper BTree class now.

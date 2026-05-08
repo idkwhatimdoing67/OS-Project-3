@@ -43,10 +43,39 @@ class BufferManager:
         return node
     
     def register_new_node(self, node):
+        # Take new node created by BTree, add to buffer, marks it for saving
         
+        # Enforce 3 node limit
+        if len(self.nodes_in_memory) >= self.max_nodes:
+            self._evict_oldest()
+        
+        self.nodes_in_memory[node.block_id] = node
+        
+        self.mark_dirty(node.block_id) # New node is inherently dirty
     
     def mark_dirty(self, block_id):
+        # Marks as dirty
+        if block_id in self.nodes_in_memory:
+            self.dirty_blocks.add(block_id)
     
     def _evict_oldest(self):
+        # Removes LRU node from mem
+        # If modified, packs into bytes and saves to disk
+        
+        # Remove and return first item in ordereddict; last LRU item
+        evicted_block_id, evicted_node = self.nodes_in_memory.popitem(last=False)
     
+        # Check if evicted node was modified in mem
+        if evicted_block_id in self.dirty_blocks:
+            # Tell node to serialize itself back into 512 bytes
+            raw_data = evicted_node.pack_to_bytes()
+            
+            # Write bytes to disk
+            self.file_manager.write_block(evicted_block_id, raw_data)
+            
+            self.dirty_blocks.remove(evicted_block_id) # Remove dirty status once on disk
+        
     def flush_all(self):
+        # Evicts and saves all remaining nodes in memory
+        while self.nodes_in_memory:
+            self._evict_oldest()
