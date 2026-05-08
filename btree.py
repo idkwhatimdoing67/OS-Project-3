@@ -1,4 +1,6 @@
 import struct
+import csv
+import os
 
 class BTreeNode:
     # Constants
@@ -68,6 +70,57 @@ class BTreeNode:
         # Children start at 41
         num_children = self.num_keys + 1 if self.num_keys > 0 else 0
         self.children = list(unpacked_data[41:41+num_children])
+        
+
+class BTree:
+    def __init__(self, buffer_manager):
+        # Initialize tree
+        # Uses buffer_manager to enforce 3 node limit
+        
+        self.buffer = buffer_manager
+        self.file_manager = self.buffer.file_manager
+        
+        # Min degree = 10, max 19 keys per node
+        self.t = 10
+        self.max_keys = (2*self.t) -1
+        
+        # If file is brand new, root ID = 0
+        # Create initial empty root node
+        if self.file_manager.root_id == 0:
+            new_root_id = self.file_manager.get_new_block_id()
+            new_root = BTreeNode(new_root_id)
+            
+            # Register with mem manager and set as official root
+            self.buffer.register_new_node(new_root)
+            self.file_manager.set_root_id(new_root_id)
+            
+    def _get_root(self):
+        # Fetch current root node via buffermanager
+        return self.buffer.get_node(self.file_manager.root_id)
+    
+    " Below will cover the search logic "
+    
+    def search(self, key):
+        # Search BTree for specific key, returns (key,value) tuple
+        return self._search_node(self._get_root(), key)
+    
+    def _search_node(self,node,key):
+        # Search helper, acts as core functionality
+        i = 0
+        
+        # Find first key >= to target
+        while i < node.num_keys and key > node.keys[i]:
+            i += 1
+        
+        # Check if the exact key was found
+        if i < node.num_keys and key == node.keys[i]:
+            return (node.keys[i], node.values[i])
+        
+        # If not found and node is leaf, then the key must not exist
+        if node.is_leaf():
+            return None
+        
+    
         
         
 

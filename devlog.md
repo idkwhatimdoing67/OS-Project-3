@@ -86,3 +86,33 @@ This should ideally capture all buffer functionality we'll need.
 
 3:03 PM
 Finished writing in the logic for the buffermanager class, should have everything needed for proper BTree class now.
+
+BTree class:
+Init
+get_root
+search
+search_node (Act as node helper for the search wrapper method)
+insert
+split_child
+insert_non_full
+print_tree
+extract_to_csv
+load_from_csv
+in_order_traverse
+
+This will be the largest class and ideally handle the complete functionality that the Btree will need.
+
+
+3:40 PM
+Wrote in the Search logic for the BTree
+So far the init, get_root, search, and search_node methods are done.
+
+I'm deciding to split the class conceptually into multiple sections;
+I'm targeting these sections:
+Search
+Insertion
+Utility
+
+This will help me stay organized at least in my head when writing them.
+
+I've written the first piece of the insertion logic, my goal is to define the regular insertion and just put the calls to the other "edge" cases into that logic so I can better visualize how it comes together before writing the logic for those methods specifically. 
