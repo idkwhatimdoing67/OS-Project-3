@@ -116,3 +116,7 @@ Utility
 This will help me stay organized at least in my head when writing them.
 
 I've written the first piece of the insertion logic, my goal is to define the regular insertion and just put the calls to the other "edge" cases into that logic so I can better visualize how it comes together before writing the logic for those methods specifically. 
+
+4:30 PM
+I've written the rest of the insertion logic, will begin on the utility logic next.  Hopefully it'll come together but the challenge is that I can't really test much until the program is all fully built.  At least if I can I'm not sure how.
+

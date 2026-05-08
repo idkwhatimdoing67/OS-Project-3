@@ -121,6 +121,127 @@ class BTree:
             return None
         
     
+    " Insertion logic below "
+    
+    def insert(self, key, value):
+        # Insert new key/value pair into BTree
         
+        root = self._get_root()
+        
+        # If root is full, must split
+        if root.num_keys == self.max_keys:
+            # Create new empty node to become new root
+            new_root_id = self.file_manager.get_new_block_id()
+            new_root = BTreeNode(new_root_id)
+            
+            #Make old root a child of new root
+            new_root.children.append(root.block_id)
+            self.buffer.register_new_node(new_root)
+            
+            #Update file manager's global root pointer
+            self.file_manager.set_root_id(new_root_id)
+            
+            # Split old root
+            self._split_child(new_root, 0, root)
+            
+            # Insert new key into new tree
+            self._insert_non_full(new_root, key, value)
+        else:
+            # Root isn't full, start normal insertion
+            self._insert_non_full(root, key, value)
+        
+    def _split_child(self, parent, index, full_child):
+        # Split full node into two nodes (19 keys to 9 each)
+        # Middle key (The 10th) becomes parent node
+        
+        # Crate new sibling node
+        new_sibling_id = self.file_manager.get_new_block_id()
+        new_sibling = BTreeNode(new_sibling_id)
+        new_sibling.parent_id = parent.block_id
+        
+        # New sibling gets upper 9 keys/values
+        new_sibling.keys = full_child.keys[self.t:]
+        new_sibling.values = full_child.values[self.t:]
+        new_sibling.num_keys = self.t - 1
+        
+        # If the full child is not leaf, sibling also takes upper 10
+        if not full_child.is_leaf():
+            new_sibling.children = full_child.children[self.t:]
+            full_child.children = full_child.children[:self.t]
+        
+        # Full child keeps lower 9 keys
+        # 10th key is median to be pushed up
+        median_key = full_child.keys[self.t - 1]
+        median_val = full_child.values[self.t - 1]
+        
+        full_child.keys = full_child.keys[:self.t - 1]
+        full_child.values = full_child.values[:self.t - 1]
+        full_child.num_keys = self.t - 1
+        
+        # Push median key/value up to parent
+        parent.keys.insert(index, median_key)
+        parent.values.insert(index, median_val)
+        parent.num_keys += 1
+        
+        # Add new sibling's ID to parent's children array
+        parent.children.insert(index + 1, new_sibling_id)
+        
+        # Register new sibling and mark all 3 nodes as dirty
+        # Marked as dirty so they save
+        self.buffer.register_new_node(new_sibling)
+        self.buffer.mark_dirty(parent.block_id)
+        self.buffer.mark_dirty(full_child.block_id)
+        
+    def _insert_non_full(self, node, key, value):
+        # Descend through tree, preemptively splitting if finding a full node
+        # Allows us not to need backward traversal
+        
+        i = node.num_keys - 1
+        
+        if node.is_leaf():
+            # Base Case: If a leaf node, Insert
+            
+            # Pad lists first with 0s
+            node.keys.append(0)
+            node.values.append(0)
+            
+            while i >= 0 and key < node.keys[i]:
+                node.keys[i+1] = node.keys[i]
+                node.values[i+1] = node.values[i]
+                i -= 1
+            
+            node.keys[i+1] = key
+            node.values[i+1] = value
+            node.num_keys += 1
+            
+            # Pop the trailing zeros
+            node.keys = node.keys[:node.num_keys]
+            node.values = node.values[:node.num_keys]
+            
+            self.buffer.mark_dirty(node.block_id)
+            
+        else:
+            # Recursive case: Find which child pointer to descend into
+            while i >= 0 and key < node.keys[i]:
+                i -= 1
+            i += 1
+            
+            child_id = node.children[i]
+            child = self.buffer.get_node(child_id)
+            
+            # Preemptive split
+            # If child is full split before entering (This sounds crazy out of context)
+            if child.num_keys == self.max_keys:
+                self._split_child(node, i, child)
+            
+                # Once split, move median key up
+                # Check where key should go: left or right
+                if key > node.keys[i]:
+                    i += 1
+                    child_id = node.children[i]
+                    child = self.buffer.get_node(child_id)
+            
+            # Descended into non-full kid
+            self._insert_non_full(child, key, value)
         
 
