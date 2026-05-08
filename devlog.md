@@ -51,3 +51,5 @@ Changed the variables root_id and next_block_id from vars to have proper getter/
     I'm sure there'll be some typo that destroys my machine
 
 
+2:46 AM
+Got started on Btree node class, wanted to initialize constants and the is_leaf method.
