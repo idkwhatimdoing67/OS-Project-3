@@ -63,3 +63,23 @@ pack_to_bytes
 unpack_from_bytes
 
 This way the node can ideally just exist to work with the disk by packing/unpacking and we can focus on core functionality in BTree class proper.
+
+2:00 PM
+Begin writing the buffermanager class
+The goal will be to create methods to work on the lower level than the btree.  I'm thinking of it on a conceptual level where we have:
+
+BTree
+BTreeNode
+BufferManager
+
+Where the BTree will be manipulating the Node class which will be directly interacting with the buffer
+
+Methods:
+init
+getnode
+register_new_node
+mark_dirty
+evict_oldest
+flush_all
+
+This should ideally capture all buffer functionality we'll need
