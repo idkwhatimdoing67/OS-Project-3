@@ -149,3 +149,6 @@ Everything else though worked for the csv portion.
 I'm not particularly sure why it would be happening but I'll take another peak at the search logic.
 Then again I'm not so terribly worried as most of it works and I'm kind of burnt out from the semester.
 
+
+8:45 PM
+I've gone in and looked through and ultimately I'm not sure why that specific quirk is happening.  However as the code does function within the test cases of the assignment I'm going to leave it as is and turn it in.
