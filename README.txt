@@ -2,6 +2,21 @@ This code is split into multiple files
 
 main.py: Main driver, only file needed to be called when running
 
+
+How to run:
+Type out: python3 main.py cmd <index_file>
+
+Below is a format to help with the commands available
+  create <index_file>
+  insert <index_file> <key> <value>
+  search <index_file> <key>
+  load <index_file> <csv_file>
+  print <index_file>
+  extract <index_file> <csv_file>
+
+Example: python3 main.py extract index.idx output.csv
+
+
 Class Files:
 btree.py
 buffermanager.py
